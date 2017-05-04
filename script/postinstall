@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+const Promise = require('bluebird');
+const fse = Promise.promisifyAll(require('fs-extra'));
+const path = require('path');
+const cp = Promise.promisifyAll(require('child_process'));
+
+module.exports = () => {
+  return Promise.resolve()
+    .then(() => {
+      const buildPkg = path.join(__dirname, '..', 'package.json');
+      const npmrcPath = path.join(__dirname, '..', 'app', '.npmrc');
+
+      const const vElectron = require(buildPkg).dependencies['electron-prebuilt']
+        .replace('^', '')
+        .replace('~', '')
+        .trim();
+
+      const output =
+        `runtime = electron
+        target = ${vElectron}
+        target_arch = ${process.arch}
+        disturl = https://atom.io/download/atom-shell
+        progress = true
+        `;
+
+      return fse.writeFileAsync(npmrcPath, output);
+    })
+    .then(() => {
+      console.log('fish')
+      return cp.execAsync('npm i', {cwd: path.join('__dirname', '..', 'app'), stdio: 'pipe'});
+    });
+};
+
+if (require.main === module) {
+  module.exports();
+}

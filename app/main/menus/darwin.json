@@ -1,0 +1,16 @@
+[
+  {
+    "label": "ProductName",
+    "submenu": [
+      {
+        "label": "AboutProduct",
+        "command": "application:open-about"
+      },
+      {
+        "label": "ToggleDeveloperTools",
+        "command": "window:toggle-dev-tools",
+        "accelerator": "Alt+Command+I"
+      }
+    ]
+  }
+]
