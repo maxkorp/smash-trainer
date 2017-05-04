@@ -10,7 +10,7 @@ module.exports = () => {
       const buildPkg = path.join(__dirname, '..', 'package.json');
       const npmrcPath = path.join(__dirname, '..', 'app', '.npmrc');
 
-      const const vElectron = require(buildPkg).dependencies['electron-prebuilt']
+      const vElectron = require(buildPkg).dependencies['electron-prebuilt']
         .replace('^', '')
         .replace('~', '')
         .trim();
@@ -26,7 +26,6 @@ module.exports = () => {
       return fse.writeFileAsync(npmrcPath, output);
     })
     .then(() => {
-      console.log('fish')
       return cp.execAsync('npm i', {cwd: path.join('__dirname', '..', 'app'), stdio: 'pipe'});
     });
 };
