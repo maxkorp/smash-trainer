@@ -7,25 +7,23 @@ let start;
 let controller;
 let inputNode;
 let expectedNode;
-  let frames = [];
-  let i = 0;
+let frames = [];
+let i = 0;
+const multiplier = 284.261 / 200;
 
 @inject('store') @observer
 class InputIndicator extends React.Component {
   componentDidMount() {
-    controller = this.tryInitController();
+    this.tryInitController();
     inputNode = document.getElementById('input-indicator');
     expectedNode = document.getElementById('expected-indicator');
   }
 
   tryInitController() {
-    // const foundController = gamecube.init().controllers[0];
-    // if (!foundController) {
-    //   alert('no controller detected, try replugging and then hit ok');
-    //   return tryInitController();
-    // }
-    //
-    // return foundController;
+    controller = gamecube.init().controllers[0];
+    if (!controller) {
+      setTimeout(() => this.tryInitController(), 25);
+    }
   }
 
   render() {
@@ -41,11 +39,6 @@ class InputIndicator extends React.Component {
       }
 
       const frame = 1 + parseInt((timestamp - start) / frameLength);
-      frames.push(frame);
-      if (frames.length === 10) {
-        console.log(frames);
-        frames = [];
-      }
       this.updateInputLocation(frame);
       this.updateExpectedLocation(frame);
 
@@ -59,22 +52,29 @@ class InputIndicator extends React.Component {
 
   updateInputLocation(frame) {
     if (!inputNode) {
+      inputNode = document.getElementById('input-indicator');
+      if (!inputNode) {
+        return;
+      }
+    }
+
+    if (!controller) {
       return;
     }
 
-    // if (!controller) {
-    //   return;
-    // }
-
-    controller = {
-      thumbX: frame % 20 * 20 ,
-      thumbY: frame % 20 * -20
-    }
-    inputNode.style.transform = `translate3d(${controller.thumbX}px,${controller.thumbY}px,0)`
+    const x = (controller.buttonState.thumbX - 128) * multiplier;
+    const y = (controller.buttonState.thumbY - 128) * -1 * multiplier;
+    inputNode.style.transform = `translate3d(${x}px,${y}px,0)`;
   }
 
   updateExpectedLocation(frame) {
-    return {x: 0, y: 0};
+    if (!expectedNode) {
+      expectedNode = document.getElementById('expected-indicator');
+      if (!expectedNode) {
+        return;
+      }
+    }
+    expectedNode.style.transform = `translate3d(0,0,0)`;
   }
 
   shouldComponentUpdate(newProps) {

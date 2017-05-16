@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "electron app",
     "postinstall": "node script/postinstall"
   },
   "author": "",
