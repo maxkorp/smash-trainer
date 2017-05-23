@@ -1,6 +1,7 @@
 const React = require('react');
 const { inject, observer } = require('mobx-react');
 const gamecube = require('node-gamecube-adapter');
+const movements = require('./../../shared/movements');
 
 let nextAnimationFrame;
 let start;
@@ -38,7 +39,12 @@ class InputIndicator extends React.Component {
         start = timestamp;
       }
 
-      const frame = 1 + parseInt((timestamp - start) / frameLength);
+      let frame = 1 + parseInt((timestamp - start) / frameLength);
+      if (frame >= 60) {
+        frame = frame % 60;
+        start = timestamp;
+      }
+
       this.updateInputLocation(frame);
       this.updateExpectedLocation(frame);
 
@@ -50,7 +56,7 @@ class InputIndicator extends React.Component {
     return null;
   }
 
-  updateInputLocation(frame) {
+  updateInputLocation() {
     if (!inputNode) {
       inputNode = document.getElementById('input-indicator');
       if (!inputNode) {
@@ -74,7 +80,20 @@ class InputIndicator extends React.Component {
         return;
       }
     }
-    expectedNode.style.transform = `translate3d(0,0,0)`;
+
+    const movement = movements[this.props.store.movement];
+    if (!movement) {
+      expectedNode.style.transform = `translate3d(0,0,0)`;
+      return;
+    }
+
+    const frames = movement.frames[frame];
+    if (!frames) {
+      expectedNode.style.transform = `translate3d(0,0,0)`;
+      return;
+    }
+
+    expectedNode.style.transform = `translate3d(${frames.x},${frames.y},0)`;
   }
 
   shouldComponentUpdate(newProps) {
