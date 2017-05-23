@@ -9,7 +9,7 @@ let inputNode;
 let expectedNode;
 let frames = [];
 let i = 0;
-const multiplier = 284.261 / 200;
+const multiplier = 300 / 230; // roughly max input
 
 @inject('store') @observer
 class InputIndicator extends React.Component {
