@@ -13,7 +13,7 @@ class ControlPanel extends React.Component {
 
   render() {
     return (
-      <div className="container bottom">
+      <div className="bottom container">
         <form className="form-inline">
           <div className="form-group">
             <label htmlFor="tempo">Tempo:</label>
