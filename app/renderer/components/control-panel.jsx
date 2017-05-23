@@ -1,6 +1,8 @@
 const React = require('react');
 const { inject, observer } = require('mobx-react');
 
+const movements = require('./../../shared/movements');
+
 @inject('store') @observer
 class ControlPanel extends React.Component {
   onChangeNumber(e) {
@@ -9,6 +11,15 @@ class ControlPanel extends React.Component {
 
   onChangeMovement(e) {
     this.props.store.setMovement(e.target.value);
+  }
+
+  renderMovements() {
+    return Object.keys(movements).map((id) => {
+      const movement = movements[id];
+      return (
+        <option value={id} key={id}>{movement.name}</option>
+      );
+    });
   }
 
   render() {
@@ -21,8 +32,7 @@ class ControlPanel extends React.Component {
 
             <label htmlFor="movement">Movement:</label>
             <select id="movement" className="mb-2 mr-sm-2 mb-sm-0" onChange={(e) => this.onChangeMovement(e)} value={this.props.store.movement}>
-              <option value="perfect-pivot">Perfect Pivot</option>
-              <option value="goats">Goats</option>
+              {this.renderMovements()}
             </select>
           </div>
         </form>

@@ -1,4 +1,5 @@
 const {observable, action} = require('mobx');
+const movements = require('./../../shared/movements');
 
 class Store {
   @observable tempo;
@@ -10,11 +11,10 @@ class Store {
 
   @action init() {
     this.tempo = 60;
-    this.movement = 'perfect-pivot';
+    this.movement = 'perfectPivotRightToLeft';
   }
 
   @action setTempo(tempo) {
-
     let parsedTempo = parseInt(tempo);
 
     if ((parsedTempo % 1) !== 0) {
@@ -30,13 +30,14 @@ class Store {
     this.tempo = parsedTempo;
   }
 
-  @action setMovement(action) {
-    const movements = ['perfect-pivot'];
-    if (!movements.includes(movement)) {
-      return new Error(`invalid movement: ${movement}. movement must be one of: \n${movements.join('\n')}\n`);
+  @action setMovement(movement) {
+    const validMovements = Object.keys(movements);
+    if (!validMovements.includes(movement)) {
+      console.log(`invalid movement: ${movement}. movement must be one of: \n${validMovements.join('\n')}\n`);
+      return new Error(`invalid movement: ${movement}. movement must be one of: \n${validMovements.join('\n')}\n`);
     }
 
-    this.action = action;
+    this.movement = movement;
   }
 }
 

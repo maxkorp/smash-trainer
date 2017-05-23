@@ -18,10 +18,10 @@ for (let i = 0; i < 60; i++) {
 
 module.exports.perfectPivotRightToLeft = {
   name: 'Perfect Pivot (Right to Left)',
-  rtlFrames
+  frames: rtlFrames
 };
 
 module.exports.perfectPivotLeftToRight = {
   name: 'Perfect Pivot (Left to Right)',
-  ltrFrames
+  frames: ltrFrames
 };
